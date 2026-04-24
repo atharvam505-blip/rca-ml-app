@@ -225,14 +225,14 @@ def call_llm(prompt, api_key, provider="claude"):
                 max_tokens=1024,
             )
             return resp.choices[0].message.content
-        elif provider == "grok" and OPENAI_AVAILABLE:
-            # Grok uses an OpenAI-compatible API — only base_url differs
+        elif provider == "groq" and OPENAI_AVAILABLE:
+            # Groq uses OpenAI-compatible API — fast inference (LLaMA)
             client = openai.OpenAI(
                 api_key=api_key,
-                base_url="https://api.x.ai/v1",
+                base_url="https://api.groq.com/openai/v1",
             )
             resp = client.chat.completions.create(
-                model="grok-3",
+                model="llama-3.3-70b-versatile",
                 messages=[{"role": "user", "content": prompt}],
                 max_tokens=1024,
             )
@@ -319,7 +319,7 @@ def main():
         st.markdown("## 🔍 RCA System")
         st.markdown("---")
         st.markdown("### LLM Configuration")
-        provider = st.selectbox("Provider", ["claude", "openai", "grok"])
+        provider = st.selectbox("Provider", ["claude", "openai", "groq"])
         api_key = st.text_input("API Key", type="password",
                                 placeholder="sk-... or anthropic key")
         st.markdown("---")
