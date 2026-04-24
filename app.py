@@ -78,7 +78,14 @@ DARK_LAYOUT = dict(
 # 1. DATA LOADING
 # =============================================================================
 def load_data(file):
-    return pd.read_csv(file)
+    for enc in ["utf-8", "latin-1", "cp1252", "utf-16"]:
+        try:
+            file.seek(0)
+            return pd.read_csv(file, encoding=enc)
+        except Exception:
+            continue
+    file.seek(0)
+    return pd.read_csv(file, encoding="latin-1", errors="replace")
 
 def detect_columns(df):
     date_cols, cat_cols, num_cols = [], [], []
